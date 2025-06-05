@@ -97,3 +97,30 @@ export const getProfile = async (req: Request, res: Response, next: NextFunction
     next(error)
   }
 }
+
+export const handleEnquiry = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { fullName, email, phone, yogaExperience, motivation } = req.body;
+
+    if (!fullName || !email || !phone || !yogaExperience || !motivation) {
+      return next(new AppError("All fields are required", 400));
+    }
+
+    const newEnquiry = new Enquiry({
+      fullName,
+      email,
+      phone,
+      yogaExperience,
+      motivation,
+    });
+
+    await newEnquiry.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Enquiry submitted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
