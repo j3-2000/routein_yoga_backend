@@ -10,6 +10,6 @@ router.post("/login", login)
 
 // Protected routes
 router.get("/profile", protect, getProfile)
-router.get("/community/join",, handleEnquiry )
+router.get("/community/join", handleEnquiry )
 
 export default router
