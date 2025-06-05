@@ -1,15 +1,47 @@
-// models/Enquiry.model.ts
 import mongoose from "mongoose";
 
-const enquirySchema = new mongoose.Schema(
+export interface IEnquiry extends mongoose.Document {
+  fullName: string;
+  email: string;
+  phone: string;
+  yogaExperience: string;
+  motivation: string;
+}
+
+const enquirySchema = new mongoose.Schema<IEnquiry>(
   {
-    fullName: { type: String, required: true },
-    email: { type: String, required: true },
-    phone: { type: String, required: true },
-    yogaExperience: { type: String, required: true },
-    motivation: { type: String, required: true },
+    fullName: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 150,
+    },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      maxlength: 300,
+    },
+    phone: {
+      type: String,
+      required: true,
+      match: /^[6-9]\d{9}$/, // Indian phone validation example, adjust if needed
+    },
+    yogaExperience: {
+      type: String,
+      required: true,
+      maxlength: 500,
+    },
+    motivation: {
+      type: String,
+      required: true,
+      maxlength: 1000,
+    },
   },
   { timestamps: true }
 );
 
-export const Enquiry = mongoose.model("Enquiry", enquirySchema);
+const Enquiry = mongoose.model<IEnquiry>("Enquiry", enquirySchema);
+
+export default Enquiry;
