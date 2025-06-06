@@ -1,9 +1,12 @@
 import type { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
+import nodemailer from "nodemailer";
 import User from "../models/user"
 import Enquiry from "../models/enquiry"
 import { schema, type TSchema } from "../utils/validation"
 import { AppError } from "../utils/appError"
+import dotenv from "dotenv";
+dotenv.config();
 
 // Generate JWT token
 const generateToken = (userId: string): string => {
@@ -99,6 +102,33 @@ export const getProfile = async (req: Request, res: Response, next: NextFunction
   }
 }
 
+// export const handleEnquiry = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const { fullName, email, phone, yogaExperience, motivation } = req.body;
+
+//     if (!fullName || !email || !phone || !yogaExperience || !motivation) {
+//       return next(new AppError("All fields are required", 400));
+//     }
+
+//     const newEnquiry = new Enquiry({
+//       fullName,
+//       email,
+//       phone,
+//       yogaExperience,
+//       motivation,
+//     });
+
+//     await newEnquiry.save();
+
+//     res.status(201).json({
+//       success: true,
+//       message: "Enquiry submitted successfully",
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
 export const handleEnquiry = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { fullName, email, phone, yogaExperience, motivation } = req.body;
@@ -116,6 +146,37 @@ export const handleEnquiry = async (req: Request, res: Response, next: NextFunct
     });
 
     await newEnquiry.save();
+
+    // Send Email to Admin
+    const transporter = nodemailer.createTransport({
+      service: "gmail", // Or use SMTP config
+      auth: {
+        user: process.env.ADMIN_EMAIL,      // e.g., admin@example.com
+        pass: process.env.ADMIN_EMAIL_PASS, // app-specific password
+      },
+    });
+
+    const mailOptions = {
+      from: `"RouteIn Yoga" <${process.env.ADMIN_EMAIL}>`,
+      to: process.env.ADMIN_EMAIL,
+      subject: "New Enquiry Received",
+      html: `
+        <h2>New Yoga Enquiry</h2>
+        <p><strong>Name:</strong> ${fullName}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Yoga Experience:</strong> ${yogaExperience}</p>
+        <p><strong>Motivation:</strong> ${motivation}</p>
+      `,
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error("Error sending mail:", err);
+      } else {
+        console.log("Enquiry email sent:", info.response);
+      }
+    });
 
     res.status(201).json({
       success: true,
