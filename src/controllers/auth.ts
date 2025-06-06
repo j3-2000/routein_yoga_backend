@@ -148,27 +148,28 @@ export const handleEnquiry = async (req: Request, res: Response, next: NextFunct
     await newEnquiry.save();
 
     // Send Email to Admin
-    const transporter = nodemailer.createTransport({
-      service: "gmail", // Or use SMTP config
-      auth: {
-        user: process.env.ADMIN_EMAIL,      // e.g., admin@example.com
-        pass: process.env.ADMIN_EMAIL_PASS, // app-specific password
-      },
-    });
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
-    const mailOptions = {
-      from: `"RouteIn Yoga" <${process.env.ADMIN_EMAIL}>`,
-      to: process.env.ADMIN_EMAIL,
-      subject: "New Enquiry Received",
-      html: `
-        <h2>New Yoga Enquiry</h2>
-        <p><strong>Name:</strong> ${fullName}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Yoga Experience:</strong> ${yogaExperience}</p>
-        <p><strong>Motivation:</strong> ${motivation}</p>
-      `,
-    };
+const mailOptions = {
+  from: `"RouteIn Yoga" <${process.env.EMAIL_USER}>`, // sender is your Gmail
+  to: process.env.ADMIN_EMAIL,                        // recipient is admin email
+  subject: "New Enquiry Received",
+  html: `
+    <h2>New Yoga Enquiry</h2>
+    <p><strong>Name:</strong> ${fullName}</p>
+    <p><strong>Email:</strong> ${email}</p>
+    <p><strong>Phone:</strong> ${phone}</p>
+    <p><strong>Yoga Experience:</strong> ${yogaExperience}</p>
+    <p><strong>Motivation:</strong> ${motivation}</p>
+  `,
+};
+
 
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
