@@ -20,7 +20,7 @@ export const createBooking = async (req: Request, res: Response, next: NextFunct
     }
 
     // Fetch user from DB
-    const user = await User.findById(userId).select("fullName email"); // or userName, depends on your schema
+    const user = await User.findById(userId).select("fullName email phoneNumber"); // or userName, depends on your schema
     if (!user) {
       return next(new AppError("User not found", 404));
     }
