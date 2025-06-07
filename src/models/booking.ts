@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 // TypeScript Interface
 export interface IWorkshopBooking extends mongoose.Document {
   userId: mongoose.Types.ObjectId;
-  timeslot: "morning" | "afternoon" | "evening";
+  timeslots: "morning" | "afternoon" | "evening";
   experience: "beginner" | "intermediate" | "advanced";
   message?: string;
   createdAt: Date;
@@ -18,7 +18,7 @@ const bookingSchema = new mongoose.Schema<IWorkshopBooking>(
       ref: "User",
       required: true,
     },
-    timeslot: {
+    timeslots: {
       type: String,
       enum: ["morning", "afternoon", "evening"],
       required: true,
