@@ -187,3 +187,45 @@ const mailOptions = {
     next(error);
   }
 };
+
+
+export const contactUs = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { name, email, phone, intention, message } = req.body;
+
+    if (!name || !email || !phone || !intention) {
+      return res.status(400).json({ error: "Missing required fields." });
+    }
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: `"RouteInYoga Contact" <${process.env.SMTP_USER}>`,
+      to: "admin@routeinyoga.com",
+      subject: "New Contact Us Enquiry",
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; border-radius: 8px;">
+          <h2 style="color: #4caf50;">New Contact Us Enquiry</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
+          <p><strong>Intention of Practice:</strong> ${intention}</p>
+          <p><strong>Message:</strong> ${message || "N/A"}</p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    return res.status(200).json({ success: true, message: "Enquiry sent successfully!" });
+  } catch (error) {
+    console.error("Contact Us Error:", error);
+    return res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};
