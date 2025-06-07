@@ -1,25 +1,28 @@
-const Booking = require("../models/Booking");
+import type { Request, Response, NextFunction } from "express";
+import Booking from "../models/booking";
+import { AppError } from "../utils/appError";
 
-exports.createBooking = async (req, res) => {
+export const createBooking = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { timeslots, experience, message } = req.body;
 
     if (!timeslots || !experience) {
-      return res.status(400).json({ success: false, message: "Timeslots and experience are required" });
+      return next(new AppError("Timeslots and experience are required", 400));
     }
 
-    const booking = new Booking({
-      userId: req.user.id,
+    const booking = await Booking.create({
+      userId: req.user?.id,
       timeslots,
       experience,
       message,
     });
 
-    await booking.save();
-
-    res.status(201).json({ success: true, message: "Booking created", data: booking });
-  } catch (err) {
-    console.error("Booking error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(201).json({
+      success: true,
+      message: "Workshop booking created successfully",
+      data: booking,
+    });
+  } catch (error) {
+    next(error);
   }
 };
