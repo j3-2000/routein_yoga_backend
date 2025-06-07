@@ -3,6 +3,7 @@ import mongoose from "mongoose"
 import dotenv from "dotenv"
 import cors from "cors"
 import authRoutes from "./routes/auth"
+import workshopRoutes  from "./routes/workshop"
 import { errorHandler } from "./middleware/errorHandler"
 
 // Load environment variables
@@ -23,6 +24,7 @@ app.use(express.json())
 
 // Routes
 app.use("/api/auth", authRoutes)
+app.use("/api/workshop", workshopRoutes )
 
 // Error handling middleware
 app.use(errorHandler)
