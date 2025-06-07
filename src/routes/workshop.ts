@@ -1,8 +1,10 @@
-const express = require("express");
+import express from "express";
+import { createBooking  } from "../controllers/workshop"
+import { protect } from "../middleware/auth"
+
 const router = express.Router();
-const { createBooking } = require("../controllers/bookingController");
-const authMiddleware = require("../middleware/authMiddleware");
 
-router.post("/", authMiddleware, createBooking);
+// 🔐 Protected route: user must be logged in
+router.post("/book", protect, createBooking);
 
-module.exports = router;
+export default router;
