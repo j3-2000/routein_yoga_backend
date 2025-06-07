@@ -200,25 +200,52 @@ export const contactUs = async (req: Request, res: Response, next: NextFunction)
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+     user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
       },
     });
 
     const mailOptions = {
-      from: `"RouteInYoga Contact" <${process.env.SMTP_USER}>`,
+     from: `"RouteIn Yoga" <${process.env.EMAIL_USER}>`,
       to: "admin@routeinyoga.com",
       subject: "New Contact Us Enquiry",
-      html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; border-radius: 8px;">
-          <h2 style="color: #4caf50;">New Contact Us Enquiry</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Phone:</strong> ${phone}</p>
-          <p><strong>Intention of Practice:</strong> ${intention}</p>
-          <p><strong>Message:</strong> ${message || "N/A"}</p>
-        </div>
-      `,
+html: `
+  <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4; padding: 40px;">
+    <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.08); padding: 30px;">
+      <h2 style="color: #2ec971; margin-bottom: 10px; font-size: 24px; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">
+        📩 New Contact Us Enquiry
+      </h2>
+      
+      <table style="width: 100%; font-size: 16px; color: #333; border-collapse: collapse;">
+        <tr>
+          <td style="padding: 8px 0;"><strong>Name:</strong></td>
+          <td style="padding: 8px 0;">${name}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0;"><strong>Email:</strong></td>
+          <td style="padding: 8px 0;">${email}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0;"><strong>Phone:</strong></td>
+          <td style="padding: 8px 0;">${phone}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0;"><strong>Intention of Practice:</strong></td>
+          <td style="padding: 8px 0;">${intention}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0;"><strong>Message:</strong></td>
+          <td style="padding: 8px 0;">${message || "N/A"}</td>
+        </tr>
+      </table>
+
+      <div style="margin-top: 30px; font-size: 14px; color: #888;">
+        This message was generated from your website's contact form.
+      </div>
+    </div>
+  </div>
+`,
+
     };
 
     await transporter.sendMail(mailOptions);
