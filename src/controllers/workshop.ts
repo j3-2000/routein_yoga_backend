@@ -3,6 +3,8 @@ import Booking from "../models/booking";
 import { AppError } from "../utils/appError";
 import nodemailer from "nodemailer";
 import User from "../models/user"; 
+import dotenv from "dotenv";
+dotenv.config();
 
 export const createBooking = async (req: Request, res: Response, next: NextFunction) => {
   try {
