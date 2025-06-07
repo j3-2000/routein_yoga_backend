@@ -160,14 +160,43 @@ const mailOptions = {
   from: `"RouteIn Yoga" <${process.env.EMAIL_USER}>`, // sender is your Gmail
   to: process.env.ADMIN_EMAIL,                        // recipient is admin email
   subject: "New Enquiry Received",
-  html: `
-    <h2>New Yoga Enquiry</h2>
-    <p><strong>Name:</strong> ${fullName}</p>
-    <p><strong>Email:</strong> ${email}</p>
-    <p><strong>Phone:</strong> ${phone}</p>
-    <p><strong>Yoga Experience:</strong> ${yogaExperience}</p>
-    <p><strong>Motivation:</strong> ${motivation}</p>
-  `,
+html: `
+  <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9fafb; padding: 40px;">
+    <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 30px;">
+      <h2 style="color: #3aafa9; font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid #3aafa9; padding-bottom: 10px;">
+        🧘‍♀️ New Yoga Enquiry
+      </h2>
+
+      <table style="width: 100%; border-collapse: collapse; color: #333; font-size: 16px;">
+        <tr>
+          <td style="padding: 10px 0; font-weight: 600; width: 180px;">Name:</td>
+          <td style="padding: 10px 0;">${fullName}</td>
+        </tr>
+        <tr style="background-color: #f0f5f5;">
+          <td style="padding: 10px 0; font-weight: 600;">Email:</td>
+          <td style="padding: 10px 0;">${email}</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 0; font-weight: 600;">Phone:</td>
+          <td style="padding: 10px 0;">${phone}</td>
+        </tr>
+        <tr style="background-color: #f0f5f5;">
+          <td style="padding: 10px 0; font-weight: 600;">Yoga Experience:</td>
+          <td style="padding: 10px 0;">${yogaExperience}</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 0; font-weight: 600;">Motivation:</td>
+          <td style="padding: 10px 0;">${motivation}</td>
+        </tr>
+      </table>
+
+      <p style="margin-top: 30px; font-size: 14px; color: #666;">
+        This enquiry was submitted via your website’s contact form.
+      </p>
+    </div>
+  </div>
+`,
+
 };
 
 
@@ -207,7 +236,7 @@ export const contactUs = async (req: Request, res: Response, next: NextFunction)
 
     const mailOptions = {
      from: `"RouteIn Yoga" <${process.env.EMAIL_USER}>`,
-      to: "admin@routeinyoga.com",
+  to: process.env.ADMIN_EMAIL,                        // recipient is admin email
       subject: "New Contact Us Enquiry",
 html: `
   <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4; padding: 40px;">
